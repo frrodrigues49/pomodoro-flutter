@@ -1,8 +1,9 @@
 import 'dart:async';
-
 import 'package:mobx/mobx.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 part 'pomodoro.store.g.dart';
+
 
 class PomodoroStore = _PomodoroStore with _$PomodoroStore;
 
@@ -13,16 +14,16 @@ abstract class _PomodoroStore with Store {
   bool iniciado = false;
 
   @observable
-  int minutos = 2;
+  int minutos = 25;
 
   @observable
   int segundos = 0;
 
   @observable
-  int tempoTrabalho = 2;
+  int tempoTrabalho = 25;
 
   @observable
-  int tempoDescanso = 1;
+  int tempoDescanso = 5;
 
   @observable
   TipoIntervalo tipoIntervalo = TipoIntervalo.TRABALHO;
@@ -32,7 +33,7 @@ abstract class _PomodoroStore with Store {
   @action
   void iniciar() {
     iniciado = true;
-    cronometro = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    cronometro = Timer.periodic(Duration(seconds: 1), (timer) {
       if (minutos == 0 && segundos == 0) {
         _trocarTipoIntervalo();
       } else if (segundos == 0) {
@@ -101,6 +102,15 @@ abstract class _PomodoroStore with Store {
     return tipoIntervalo == TipoIntervalo.DESCANSO;
   }
 
+   void _runAudio(String path) async {
+    AudioPlayer? player = AudioPlayer();
+    try {
+      await player.play(AssetSource(path));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   void _trocarTipoIntervalo() {
     if (estaTrabalhando()) {
       tipoIntervalo = TipoIntervalo.DESCANSO;
@@ -110,5 +120,6 @@ abstract class _PomodoroStore with Store {
       minutos = tempoTrabalho;
     }
     segundos = 0;
+    _runAudio('alarme.mp3');
   }
 }

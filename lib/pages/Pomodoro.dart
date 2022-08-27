@@ -18,7 +18,7 @@ class Pomodoro extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: Cronometro()),
+          Expanded(child: Cronometro()),           
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: Observer(
@@ -36,7 +36,7 @@ class Pomodoro extends StatelessWidget {
                   valor: store.tempoDescanso,
                   inc: store.iniciado && store.estaDescansando() ? null : store.incrementarTempoDescanso,
                   dec: store.iniciado && store.estaDescansando() ? null : store.decrementarTempoDescanso,
-                ),
+                ),               
               ],
             ),
             ),
